@@ -1,17 +1,21 @@
 //1. start the game
  const startButton = document.getElementById('start-btn');
  const nextButton = document.getElementById('next-btn');
+ const restart = document.getElementById('restart-btn');
  const qBox = document.getElementById('questionBox');
  const questionElement = document.getElementById('question');
  const answerElement = document.getElementById('answer-btns');
  const markBoard = document.getElementById('total');
  const right = document.getElementById('correctSign');
  const wrong = document.getElementById('wrongSign');
+ const result = document.getElementsByClassName("result");
+const marks=document.getElementById('disMarks');
 
-let shuffledQuestions, currentQuestionIndex;
+let shuffledQuestions,shuffledOptions,currentQuestionIndex;
 var count=0;
 
   startButton.addEventListener('click', startGame);
+  restart.addEventListener('click',startGame);
   nextButton.addEventListener('click', ()=> {
     currentQuestionIndex++;
     setNextQ();
@@ -22,7 +26,7 @@ var count=0;
 function startGame()
 {
     startButton.classList.add('hide');
-
+    result[0].classList.add('hide');
     shuffledQuestions= questionList.sort(()=> Math.random()-.5);
     currentQuestionIndex=0;
     count=0;
@@ -41,6 +45,7 @@ function setNextQ() {
 
 function showQuestion(obj){
   questionElement.innerText= "Q"+(currentQuestionIndex+1)+". "+obj.question;
+  shuffledOptions= obj.answers.sort(()=> Math.random()-.5);
   obj.answers.forEach(ans =>{
     const button= document.createElement('button');
     button.innerText= ans.text;
@@ -79,8 +84,12 @@ function selectAnswer(e) {
       nextButton.classList.remove('hide');
   }
   else {
-    startButton.innerText="Restart";
-    startButton.classList.remove('hide');
+    marks.innerText=count+"/"+shuffledQuestions.length;
+    qBox.classList.add('hide');
+    right.classList.add('hide');
+    wrong.classList.add('hide');
+    result[0].classList.remove("hide");
+    clearStatusClass(document.body);
     count=0;
   }
 
@@ -145,7 +154,7 @@ const questionList= [
       {text:'Serious Black', correct:false}
     ]
   },
-  {
+ {
     question:"Who is the security guard at the entrance of Gryffindor’s Common room?",
     answers: [
       {text:'Sir Nicklous', correct:false },
